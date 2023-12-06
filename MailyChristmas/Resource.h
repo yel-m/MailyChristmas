@@ -20,7 +20,6 @@
 #define IDC_EDIT_FROM                   1011
 #define IDC_RADIO_SANTA                 1013
 #define IDC_RADIO_RUDOLF                1014
-#define IDC_COMBO1                      1015
 #define IDC_COMBO_PORT                  1015
 #define IDC_RADIO_SNOWMAN               1016
 #define IDC_RADIO_COOKIE                1017
