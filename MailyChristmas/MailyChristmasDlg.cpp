@@ -52,6 +52,10 @@ END_MESSAGE_MAP()
 
 CMailyChristmasDlg::CMailyChristmasDlg(CWnd* pParent /*=nullptr*/)
 	: CDialogEx(IDD_MAILYCHRISTMAS_DIALOG, pParent)
+	, m_from(_T(""))
+	, m_server(_T(""))
+	, m_user(_T(""))
+	, m_to(_T(""))
 {
 	m_hIcon = AfxGetApp()->LoadIcon(IDR_MAINFRAME);
 }
@@ -59,12 +63,19 @@ CMailyChristmasDlg::CMailyChristmasDlg(CWnd* pParent /*=nullptr*/)
 void CMailyChristmasDlg::DoDataExchange(CDataExchange* pDX)
 {
 	CDialogEx::DoDataExchange(pDX);
+	DDX_Text(pDX, IDC_EDIT_FROM, m_from);
+	DDX_Text(pDX, IDC_EDIT_USER, m_user);
+	DDX_Text(pDX, IDC_EDIT_TO, m_to);
 }
 
 BEGIN_MESSAGE_MAP(CMailyChristmasDlg, CDialogEx)
 	ON_WM_SYSCOMMAND()
 	ON_WM_PAINT()
 	ON_WM_QUERYDRAGICON()
+	ON_EN_CHANGE(IDC_EDIT_FROM, &CMailyChristmasDlg::OnChangeEditFrom)
+	ON_EN_CHANGE(IDC_EDIT_SERVER, &CMailyChristmasDlg::OnChangeEditServer)
+	ON_BN_CLICKED(IDC_BUTTON_ADD, &CMailyChristmasDlg::OnClickedButtonAdd)
+	ON_BN_CLICKED(IDOK, &CMailyChristmasDlg::OnBnClickedOk)
 END_MESSAGE_MAP()
 
 
@@ -153,3 +164,179 @@ HCURSOR CMailyChristmasDlg::OnQueryDragIcon()
 	return static_cast<HCURSOR>(m_hIcon);
 }
 
+
+
+void CMailyChristmasDlg::OnBnClickedButton1()
+{
+	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
+}
+
+
+void CMailyChristmasDlg::OnChangeEditFrom()
+{
+	// TODO:  RICHEDIT 컨트롤인 경우, 이 컨트롤은
+	// CDialogEx::OnInitDialog() 함수를 재지정 
+	//하고 마스크에 OR 연산하여 설정된 ENM_CHANGE 플래그를 지정하여 CRichEditCtrl().SetEventMask()를 호출하지 않으면
+	// 이 알림 메시지를 보내지 않습니다.
+
+	// TODO:  여기에 컨트롤 알림 처리기 코드를 추가합니다.
+	UpdateData(TRUE);
+
+	CString name, addr, domain;
+	_parseEmailAddr(m_from, name, addr);
+
+	int pos = addr.Find(_T('@'));
+	if (pos != -1)
+		domain = addr.Mid(pos + 1);
+
+	if (domain.CompareNoCase(_T("hotmail.com")) == 0)
+	{
+		m_server = _T("smtp.office365.com");
+		m_user = addr;
+	}
+	else if (domain.CompareNoCase(_T("gmail.com")) == 0)
+	{
+		m_server = _T("smtp.gmail.com");
+		m_user = addr;
+	}
+	else if (domain.CompareNoCase(_T("yahoo.com")) == 0)
+	{
+		m_server = _T("smtp.mail.yahoo.com");
+		m_user = addr;
+	}
+	else if (domain.CompareNoCase(_T("aol.com")) == 0)
+	{
+		m_server = _T("smtp.aol.com");
+		m_user = addr;
+	}
+	else
+	{
+		m_user = addr;
+	}
+
+	UpdateData(FALSE);
+	_changeSettingforWellKnownServer();
+}
+
+void CMailyChristmasDlg::_parseEmailAddr(LPCTSTR lpszSrc, CString& name, CString& addr)
+{
+	name = _T("");
+	addr = _T("");
+
+	if (lpszSrc == NULL)
+		return;
+
+	LPCTSTR pszBuf = _tcschr(lpszSrc, _T('<'));
+	if (pszBuf == NULL)
+	{
+		addr = lpszSrc;
+	}
+	else
+	{
+		name.Append(lpszSrc, pszBuf - lpszSrc);
+		addr.Append(pszBuf);
+	}
+
+	name = name.Trim(_T(" \"<>"));
+	addr = addr.Trim(_T(" \"<>"));
+}
+
+void CMailyChristmasDlg::_changeSettingforWellKnownServer()
+{
+	UpdateData(TRUE);
+
+	if (m_server.CompareNoCase(_T("smtp.gmail.com")) == 0 ||
+		m_server.CompareNoCase(_T("smtp.office365.com")) == 0 ||
+		m_server.CompareNoCase(_T("smtp.mail.yahoo.com")) == 0 ||
+		m_server.CompareNoCase(_T("smtp.office365.com")) == 0 ||
+		m_server.CompareNoCase(_T("smtp.aol.com")) == 0)
+	{	
+		CWnd* pWnd = GetDlgItem(IDC_EDIT_USER);
+		pWnd->EnableWindow(TRUE);
+		pWnd = GetDlgItem(IDC_EDIT_PASSWORD);
+		pWnd->EnableWindow(TRUE);
+	}
+
+	UpdateData(FALSE);
+}
+
+void CMailyChristmasDlg::OnChangeEditServer()
+{
+	_changeSettingforWellKnownServer();
+}
+
+
+void CMailyChristmasDlg::OnClickedButtonAdd()
+{
+	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
+}
+
+
+void CMailyChristmasDlg::OnBnClickedOk()
+{
+	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
+	if (!UpdateData(TRUE))
+		return;
+
+	m_from = m_from.Trim();
+	m_to = m_to.Trim();
+
+	CWnd* pWnd = NULL;
+	if (m_from.GetLength() == 0)
+	{
+		MessageBox(_T("발신인 이메일 주소를 입력해주세요!"), _T("Error"), MB_OK | MB_ICONERROR);
+		pWnd = GetDlgItem(IDC_EDIT_FROM);
+		pWnd->SetFocus();
+		return;
+	}
+
+	if (m_to.GetLength() == 0)
+	{
+		MessageBox(_T("수신인 이메일 주소를 입력해주세요!"), _T("Error"), MB_OK | MB_ICONERROR);
+		pWnd = GetDlgItem(IDC_EDIT_TO);
+		pWnd->SetFocus();
+		return;
+	}
+
+	// TODO : 텍스트와 합성된 이미지 파일 생성
+	CFileDialog* pFileDlg = new CFileDialog(TRUE);
+	pFileDlg->m_ofn.Flags |= OFN_ALLOWMULTISELECT;
+
+
+
+	// TODO : 이메일 전송 코드
+
+	CString name = _T("");
+	CString addr = _T("");
+
+	_parseEmailAddr(m_from, name, addr); // 이름과 주소 따로 가져와서 각각 저장
+
+
+	// 이메일 전송에 성공했을 때
+	// if (oSmtp->SendMail() == 0)
+	// {
+		CString s;
+		s.Append(addr);
+		s.Append(_T("로 메시지가 성공적으로 전달되었습니다!"));
+		MessageBox(s, _T("OK"), MB_OK);
+	// }
+	// else
+	// {
+		// CString s = _T("Failed to delivery to: ");
+		// s.Append(addr);
+		// s.Append(_T(": "));
+		// s.Append(oSmtp->GetLastErrDescription());
+		// MessageBox(s, _T("Error"), MB_OK | MB_ICONERROR);
+	// }
+
+
+
+	pWnd = GetDlgItem(IDOK);
+	pWnd->EnableWindow(TRUE);
+	pWnd = GetDlgItem(IDCANCEL);
+	pWnd->EnableWindow(TRUE);
+
+
+
+	CDialogEx::OnOK();
+}

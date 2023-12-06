@@ -22,6 +22,10 @@ public:
 
 
 // 구현입니다.
+private:
+	static void	_parseEmailAddr(LPCTSTR lpszSrc, CString& name, CString& address);
+	static void _splitAddr(LPCTSTR lpszSrc, CStringArray& values);
+	void _changeSettingforWellKnownServer();
 protected:
 	HICON m_hIcon;
 
@@ -31,4 +35,14 @@ protected:
 	afx_msg void OnPaint();
 	afx_msg HCURSOR OnQueryDragIcon();
 	DECLARE_MESSAGE_MAP()
+public:
+	afx_msg void OnBnClickedButton1();
+	afx_msg void OnChangeEditFrom();
+	CString m_from;
+	CString m_server;
+	CString m_user;
+	afx_msg void OnChangeEditServer();
+	afx_msg void OnClickedButtonAdd();
+	afx_msg void OnBnClickedOk();
+	CString m_to;
 };
