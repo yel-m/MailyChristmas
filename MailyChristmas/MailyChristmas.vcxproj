@@ -207,7 +207,23 @@
     <None Include="res\MailyChristmas.rc2" />
   </ItemGroup>
   <ItemGroup>
+    <Image Include="cookie_pad.bmp" />
+    <Image Include="m_cookie_pad.bmp" />
+    <Image Include="m_rudolf_pad.bmp" />
+    <Image Include="m_santa_pad.bmp" />
+    <Image Include="m_snowman_pad.bmp" />
+    <Image Include="res\bitmap1.bmp" />
+    <Image Include="res\bitmap2.bmp" />
+    <Image Include="res\bmp00001.bmp" />
+    <Image Include="res\bmp00002.bmp" />
+    <Image Include="res\cookie_pad.bmp" />
     <Image Include="res\MailyChristmas.ico" />
+    <Image Include="res\rudolf_pad.bmp" />
+    <Image Include="res\santa_pad.bmp" />
+    <Image Include="res\snowman_pad.bmp" />
+    <Image Include="rudolf_pad.bmp" />
+    <Image Include="santa_pad.bmp" />
+    <Image Include="snowman_pad.bmp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

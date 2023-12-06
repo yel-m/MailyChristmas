@@ -41,8 +41,14 @@ public:
 	CString m_from;
 	CString m_server;
 	CString m_user;
+	CString m_selected_img;
 	afx_msg void OnChangeEditServer();
 	afx_msg void OnClickedButtonAdd();
 	afx_msg void OnBnClickedOk();
+	afx_msg void RadioCtrl(UINT id);
+	UINT m_radio_index;
 	CString m_to;
+	CEdit m_subject;
+	CString m_body;
+	CStatic m_img_santa;
 };

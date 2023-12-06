@@ -56,6 +56,8 @@ CMailyChristmasDlg::CMailyChristmasDlg(CWnd* pParent /*=nullptr*/)
 	, m_server(_T(""))
 	, m_user(_T(""))
 	, m_to(_T(""))
+	, m_radio_index(0)
+	, m_body(_T(""))
 {
 	m_hIcon = AfxGetApp()->LoadIcon(IDR_MAINFRAME);
 }
@@ -66,6 +68,10 @@ void CMailyChristmasDlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Text(pDX, IDC_EDIT_FROM, m_from);
 	DDX_Text(pDX, IDC_EDIT_USER, m_user);
 	DDX_Text(pDX, IDC_EDIT_TO, m_to);
+	DDX_Radio(pDX, IDC_RADIO1, (int&)m_radio_index);
+	DDX_Control(pDX, IDC_EDIT_SUBJECT, m_subject);
+	DDX_Text(pDX, IDC_EDIT_BODY, m_body);
+	DDX_Control(pDX, IDC_STATIC_SANTA, m_img_santa);
 }
 
 BEGIN_MESSAGE_MAP(CMailyChristmasDlg, CDialogEx)
@@ -76,6 +82,7 @@ BEGIN_MESSAGE_MAP(CMailyChristmasDlg, CDialogEx)
 	ON_EN_CHANGE(IDC_EDIT_SERVER, &CMailyChristmasDlg::OnChangeEditServer)
 	ON_BN_CLICKED(IDC_BUTTON_ADD, &CMailyChristmasDlg::OnClickedButtonAdd)
 	ON_BN_CLICKED(IDOK, &CMailyChristmasDlg::OnBnClickedOk)
+	ON_CONTROL_RANGE(BN_CLICKED, IDC_RADIO1, IDC_RADIO4, &CMailyChristmasDlg::RadioCtrl)
 END_MESSAGE_MAP()
 
 
@@ -111,6 +118,12 @@ BOOL CMailyChristmasDlg::OnInitDialog()
 	SetIcon(m_hIcon, FALSE);		// 작은 아이콘을 설정합니다.
 
 	// TODO: 여기에 추가 초기화 작업을 추가합니다.
+	// HBITMAP hBit = LoadBitmap(AfxGetInstanceHandle(), MAKEINTRESOURCE(IDC_STATIC_SANTA));
+	//m_img_santa.SetBitmap(hBit);
+
+	// CRect rt;
+	// m_img_santa.GetClientRect(&rt);
+	m_img_santa.SetWindowPos(NULL, 0, 0, rt.Width(), rt.Height(), SWP_SHOWWINDOW);
 
 	return TRUE;  // 포커스를 컨트롤에 설정하지 않으면 TRUE를 반환합니다.
 }
@@ -271,6 +284,25 @@ void CMailyChristmasDlg::OnClickedButtonAdd()
 	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
 }
 
+void CMailyChristmasDlg::RadioCtrl(UINT id)
+{
+	switch (id)
+	{
+	case IDC_RADIO1:
+		m_selected_img = "santa_pad.bmp";
+		break;
+	case IDC_RADIO2:
+		m_selected_img = "rudolf_pad.bmp";
+		break;
+	case IDC_RADIO3:
+		m_selected_img = "snowman_pad.bmp";
+		break;
+	case IDC_RADIO4:
+		m_selected_img = "cookeie_pad.bmp";
+		break;
+	}
+}
+
 
 void CMailyChristmasDlg::OnBnClickedOk()
 {
@@ -298,9 +330,8 @@ void CMailyChristmasDlg::OnBnClickedOk()
 		return;
 	}
 
-	// TODO : 텍스트와 합성된 이미지 파일 생성
-	CFileDialog* pFileDlg = new CFileDialog(TRUE);
-	pFileDlg->m_ofn.Flags |= OFN_ALLOWMULTISELECT;
+	// 텍스트와 합성된 이미지 파일 생성
+
 
 
 
