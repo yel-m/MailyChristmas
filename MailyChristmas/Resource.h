@@ -7,15 +7,16 @@
 #define IDS_ABOUTBOX                    101
 #define IDD_MAILYCHRISTMAS_DIALOG       102
 #define IDR_MAINFRAME                   128
-#define IDB_BITMAP_COOKIE               140
-#define IDB_BITMAP_M_COOKIE             141
 #define U                               142
-#define IDB_BITMAP_M_RUDOLF             142
-#define IDB_BITMAP_M_SANTA              143
-#define IDB_BITMAP_M_SNOWMAN            144
-#define IDB_BITMAP_RUDOLF               145
-#define IDB_BITMAP_SANTA                146
-#define IDB_BITMAP_SNOWMAN              147
+#define IDB_BITMAP_S                    149
+#define IDB_BITMAP_SNOWMAN              149
+#define IDB_BITMAP2                     150
+#define IDB_BITMAP_RUDOLF               150
+#define IDB_BITMAP3                     151
+#define IDB_BITMAP_COOKIE               151
+#define IDB_BITMAP4                     152
+#define IDB_BITMAP_SA                   152
+#define IDB_BITMAP_SANTA                152
 #define IDC_EDIT_FRO                    1000
 #define IDC_EDIT_USER                   1000
 #define IDC_EDIT_TO                     1001
@@ -40,7 +41,7 @@
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
-#define _APS_NEXT_RESOURCE_VALUE        148
+#define _APS_NEXT_RESOURCE_VALUE        153
 #define _APS_NEXT_COMMAND_VALUE         32771
 #define _APS_NEXT_CONTROL_VALUE         1019
 #define _APS_NEXT_SYMED_VALUE           101
