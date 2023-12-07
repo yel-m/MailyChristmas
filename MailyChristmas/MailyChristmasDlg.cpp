@@ -58,6 +58,8 @@ CMailyChristmasDlg::CMailyChristmasDlg(CWnd* pParent /*=nullptr*/)
 	, m_to(_T(""))
 	, m_radio_index(0)
 	, m_body(_T(""))
+	, m_password(_T(""))
+	, m_subject(_T(""))
 {
 	m_hIcon = AfxGetApp()->LoadIcon(IDR_MAINFRAME);
 }
@@ -69,9 +71,11 @@ void CMailyChristmasDlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Text(pDX, IDC_EDIT_USER, m_user);
 	DDX_Text(pDX, IDC_EDIT_TO, m_to);
 	DDX_Radio(pDX, IDC_RADIO1, (int&)m_radio_index);
-	DDX_Control(pDX, IDC_EDIT_SUBJECT, m_subject);
+	DDX_Text(pDX, IDC_EDIT_SUBJECT, m_subject);
 	DDX_Text(pDX, IDC_EDIT_BODY, m_body);
 	DDX_Control(pDX, IDC_STATIC_SANTA, m_img_santa);
+	DDX_Text(pDX, IDC_EDIT_PASSWORD, m_password);
+	DDX_Text(pDX, IDC_EDIT_SUBJECT, m_subject);
 }
 
 BEGIN_MESSAGE_MAP(CMailyChristmasDlg, CDialogEx)
@@ -123,7 +127,7 @@ BOOL CMailyChristmasDlg::OnInitDialog()
 
 	// CRect rt;
 	// m_img_santa.GetClientRect(&rt);
-	m_img_santa.SetWindowPos(NULL, 0, 0, rt.Width(), rt.Height(), SWP_SHOWWINDOW);
+	// m_img_santa.SetWindowPos(NULL, 0, 0, rt.Width(), rt.Height(), SWP_SHOWWINDOW);
 
 	return TRUE;  // 포커스를 컨트롤에 설정하지 않으면 TRUE를 반환합니다.
 }
@@ -205,6 +209,11 @@ void CMailyChristmasDlg::OnChangeEditFrom()
 	if (domain.CompareNoCase(_T("hotmail.com")) == 0)
 	{
 		m_server = _T("smtp.office365.com");
+		m_user = addr;
+	}
+	else if (domain.CompareNoCase(_T("naver.com")) == 0)
+	{
+		m_server = _T("smtp.naver.com");
 		m_user = addr;
 	}
 	else if (domain.CompareNoCase(_T("gmail.com")) == 0)
@@ -330,44 +339,111 @@ void CMailyChristmasDlg::OnBnClickedOk()
 		return;
 	}
 
-	// 텍스트와 합성된 이미지 파일 생성
 
 
 
+	IMailPtr oSmtp = NULL;
+	oSmtp.CreateInstance(__uuidof(EASendMailObjLib::Mail));
 
-	// TODO : 이메일 전송 코드
+
+	try
+	{
+		//The license code for EASendMail ActiveX Object,
+		//for evaluation usage, please use "TryIt" as the license code.
+		oSmtp->LicenseCode = _T("TryIt");
+	}
+	catch (_com_error& ep)
+	{
+		MessageBox((const TCHAR*)ep.Description(), _T("Error"), MB_OK);
+		return;
+	}
+
+	oSmtp->Charset = _T("utf-8");
+
+	oSmtp->ServerAddr = (LPCTSTR)m_server;
+	oSmtp->ServerPort = 465;
+
+	oSmtp->Protocol = 0; // SMTP
+
+	const int ConnectNormal = 0;
+	const int ConnectSSLAuto = 1;
+	const int ConnectSTARTTLS = 2;
+	const int ConnectDirectSSL = 3;
+	const int ConnectTryTLS = 4;
+
+	oSmtp->ConnectType = ConnectTryTLS;
+
+	// 대부분의 최신 SMTP 서버는 이제 SSL/TLS 연결을 요구합니다.
+	// ConnectTryTLS는 서버가 SSL/TLS 연결을 지원하는지 여부를 의미하며, 지원하는 경우 SSL/TLS가 자동으로 사용됩니다.
+	if (m_server.GetLength() > 0)
+	{
+		
+		oSmtp->UserName = (LPCTSTR)m_user;
+		oSmtp->Password = (LPCTSTR)m_password;
+
+		// 서버 포트에 기반하여 SSL/TLS를 사용합니다.
+		oSmtp->ConnectType = ConnectSSLAuto;
+	}
 
 	CString name = _T("");
 	CString addr = _T("");
 
-	_parseEmailAddr(m_from, name, addr); // 이름과 주소 따로 가져와서 각각 저장
+	_parseEmailAddr(m_from, name, addr);
+
+	oSmtp->From = (LPCTSTR)name;
+	oSmtp->FromAddr = (LPCTSTR)addr;
+
+	oSmtp->SignerCert->Unload();
+
+	oSmtp->AddRecipientEx((LPCTSTR)m_to, 0); // 0, Normal recipient, 1, cc, 2, bcc
+
+	CString rcpts = m_to;
 
 
-	// 이메일 전송에 성공했을 때
-	// if (oSmtp->SendMail() == 0)
-	// {
-		CString s;
-		s.Append(addr);
-		s.Append(_T("로 메시지가 성공적으로 전달되었습니다!"));
-		MessageBox(s, _T("OK"), MB_OK);
-	// }
-	// else
-	// {
-		// CString s = _T("Failed to delivery to: ");
-		// s.Append(addr);
-		// s.Append(_T(": "));
-		// s.Append(oSmtp->GetLastErrDescription());
-		// MessageBox(s, _T("Error"), MB_OK | MB_ICONERROR);
-	// }
+	oSmtp->RecipientsCerts->Clear();
 
 
+
+
+	oSmtp->Subject = (LPCTSTR)m_subject;
+	CString body = m_body;
+	body.Replace(_T("[$from]"), m_from);
+	body.Replace(_T("[$to]"), rcpts);
+	body.Replace(_T("[$subject]"), m_subject);
+
+	oSmtp->BodyText = (LPCTSTR)body;
+	oSmtp->BodyFormat = 1; //' Using HTML FORMAT to send mail
+
+	pWnd = GetDlgItem(IDOK);
+	pWnd->EnableWindow(FALSE);
+	pWnd = GetDlgItem(IDCANCEL);
+	pWnd->EnableWindow(FALSE);
+
+
+	if (oSmtp->SendMail() == 0)
+	{
+		MessageBox(_T("메시지가 성공적으로 전달되었습니다!"), _T("OK"), MB_OK);
+	}
+	else
+	{
+		CString error = _T("이메일 전송에 실패했습니다!");
+		error.Append(oSmtp->GetLastErrDescription());
+		MessageBox(error, _T("Error"), MB_OK | MB_ICONERROR);
+
+		CString server = m_server.MakeLower();
+		if (server.Find(_T("gmail.com")) != -1)
+		{
+			MessageBox(_T("Gmail doesn't support user/password login, please create app password, see comments in the source codes"));
+		}
+		else if (server.Find(_T("office365.com")) != -1)
+		{
+			MessageBox(_T("It is possible that Office 365 disabled password login in your tenant, see comments in the source codes"));
+
+		}
+	}
 
 	pWnd = GetDlgItem(IDOK);
 	pWnd->EnableWindow(TRUE);
 	pWnd = GetDlgItem(IDCANCEL);
 	pWnd->EnableWindow(TRUE);
-
-
-
-	CDialogEx::OnOK();
 }

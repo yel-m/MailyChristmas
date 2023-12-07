@@ -48,7 +48,8 @@ public:
 	afx_msg void RadioCtrl(UINT id);
 	UINT m_radio_index;
 	CString m_to;
-	CEdit m_subject;
 	CString m_body;
 	CStatic m_img_santa;
+	CString m_password;
+	CString m_subject;
 };
