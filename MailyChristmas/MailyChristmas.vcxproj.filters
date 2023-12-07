@@ -59,5 +59,65 @@
     <Image Include="res\MailyChristmas.ico">
       <Filter>리소스 파일</Filter>
     </Image>
+    <Image Include="res\bitmap1.bmp">
+      <Filter>리소스 파일</Filter>
+    </Image>
+    <Image Include="res\bitmap2.bmp">
+      <Filter>리소스 파일</Filter>
+    </Image>
+    <Image Include="res\bmp00001.bmp">
+      <Filter>리소스 파일</Filter>
+    </Image>
+    <Image Include="res\bmp00002.bmp">
+      <Filter>리소스 파일</Filter>
+    </Image>
+    <Image Include="res\cookie_pad.bmp">
+      <Filter>리소스 파일</Filter>
+    </Image>
+    <Image Include="res\rudolf_pad.bmp">
+      <Filter>리소스 파일</Filter>
+    </Image>
+    <Image Include="res\santa_pad.bmp">
+      <Filter>리소스 파일</Filter>
+    </Image>
+    <Image Include="res\snowman_pad.bmp">
+      <Filter>리소스 파일</Filter>
+    </Image>
+    <Image Include="cookie_pad.bmp">
+      <Filter>리소스 파일</Filter>
+    </Image>
+    <Image Include="m_cookie_pad.bmp">
+      <Filter>리소스 파일</Filter>
+    </Image>
+    <Image Include="m_rudolf_pad.bmp">
+      <Filter>리소스 파일</Filter>
+    </Image>
+    <Image Include="m_santa_pad.bmp">
+      <Filter>리소스 파일</Filter>
+    </Image>
+    <Image Include="m_snowman_pad.bmp">
+      <Filter>리소스 파일</Filter>
+    </Image>
+    <Image Include="rudolf_pad.bmp">
+      <Filter>리소스 파일</Filter>
+    </Image>
+    <Image Include="santa_pad.bmp">
+      <Filter>리소스 파일</Filter>
+    </Image>
+    <Image Include="snowman_pad.bmp">
+      <Filter>리소스 파일</Filter>
+    </Image>
+    <Image Include="..\..\..\..\Downloads\m_snowman_pad (1).bmp">
+      <Filter>리소스 파일</Filter>
+    </Image>
+    <Image Include="..\..\..\..\Downloads\m_rudolf_pad (1).bmp">
+      <Filter>리소스 파일</Filter>
+    </Image>
+    <Image Include="..\..\..\..\Downloads\m_cookie_pad (1).bmp">
+      <Filter>리소스 파일</Filter>
+    </Image>
+    <Image Include="..\..\..\..\Downloads\m_santa_pad (1).bmp">
+      <Filter>리소스 파일</Filter>
+    </Image>
   </ItemGroup>
 </Project>

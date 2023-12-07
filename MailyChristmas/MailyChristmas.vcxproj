@@ -107,6 +107,11 @@
       <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>$(IntDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
+    <Manifest>
+      <AdditionalManifestFiles>
+      </AdditionalManifestFiles>
+      <InputResourceManifests>C:\Program Files (x86)\EASendMail\Include\manifest\EASendMailObj.manifest</InputResourceManifests>
+    </Manifest>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -207,7 +212,27 @@
     <None Include="res\MailyChristmas.rc2" />
   </ItemGroup>
   <ItemGroup>
+    <Image Include="..\..\..\..\Downloads\m_cookie_pad (1).bmp" />
+    <Image Include="..\..\..\..\Downloads\m_rudolf_pad (1).bmp" />
+    <Image Include="..\..\..\..\Downloads\m_santa_pad (1).bmp" />
+    <Image Include="..\..\..\..\Downloads\m_snowman_pad (1).bmp" />
+    <Image Include="cookie_pad.bmp" />
+    <Image Include="m_cookie_pad.bmp" />
+    <Image Include="m_rudolf_pad.bmp" />
+    <Image Include="m_santa_pad.bmp" />
+    <Image Include="m_snowman_pad.bmp" />
+    <Image Include="res\bitmap1.bmp" />
+    <Image Include="res\bitmap2.bmp" />
+    <Image Include="res\bmp00001.bmp" />
+    <Image Include="res\bmp00002.bmp" />
+    <Image Include="res\cookie_pad.bmp" />
     <Image Include="res\MailyChristmas.ico" />
+    <Image Include="res\rudolf_pad.bmp" />
+    <Image Include="res\santa_pad.bmp" />
+    <Image Include="res\snowman_pad.bmp" />
+    <Image Include="rudolf_pad.bmp" />
+    <Image Include="santa_pad.bmp" />
+    <Image Include="snowman_pad.bmp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
