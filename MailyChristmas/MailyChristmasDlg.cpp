@@ -122,12 +122,12 @@ BOOL CMailyChristmasDlg::OnInitDialog()
 	SetIcon(m_hIcon, FALSE);		// 작은 아이콘을 설정합니다.
 
 	// TODO: 여기에 추가 초기화 작업을 추가합니다.
-	// HBITMAP hBit = LoadBitmap(AfxGetInstanceHandle(), MAKEINTRESOURCE(IDC_STATIC_SANTA));
-	//m_img_santa.SetBitmap(hBit);
+		// TODO: Add extra initialization here
+	m_body += _T("<h3>To. </h3>\r\n\r\n");
+	m_body += _T("여기에 내용을 입력해주세요.\r\n\r\n");
+	m_body += _T("<h3>From. </h3>\r\n\r\n");
 
-	// CRect rt;
-	// m_img_santa.GetClientRect(&rt);
-	// m_img_santa.SetWindowPos(NULL, 0, 0, rt.Width(), rt.Height(), SWP_SHOWWINDOW);
+	UpdateData(FALSE);
 
 	return TRUE;  // 포커스를 컨트롤에 설정하지 않으면 TRUE를 반환합니다.
 }
@@ -214,7 +214,7 @@ void CMailyChristmasDlg::OnChangeEditFrom()
 	else if (domain.CompareNoCase(_T("naver.com")) == 0)
 	{
 		m_server = _T("smtp.naver.com");
-		m_user = addr;
+		m_user = addr.Mid(0, pos);
 	}
 	else if (domain.CompareNoCase(_T("gmail.com")) == 0)
 	{
@@ -361,7 +361,7 @@ void CMailyChristmasDlg::OnBnClickedOk()
 	oSmtp->Charset = _T("utf-8");
 
 	oSmtp->ServerAddr = (LPCTSTR)m_server;
-	oSmtp->ServerPort = 465;
+	oSmtp->ServerPort = 25;
 
 	oSmtp->Protocol = 0; // SMTP
 
@@ -406,11 +406,48 @@ void CMailyChristmasDlg::OnBnClickedOk()
 
 
 	oSmtp->Subject = (LPCTSTR)m_subject;
-	CString body = m_body;
-	body.Replace(_T("[$from]"), m_from);
-	body.Replace(_T("[$to]"), rcpts);
-	body.Replace(_T("[$subject]"), m_subject);
+	
 
+	// 현재 선택된 라디오 버튼의 ID를 얻음
+	int selectedRadioID = GetCheckedRadioButton(IDC_RADIO1, IDC_RADIO4);
+
+	// 선택된 라디오 버튼에 따라 이미지 소스 설정
+	CString imageSource;
+	switch (selectedRadioID)
+	{
+	case IDC_RADIO1:
+		imageSource = "https://i.ibb.co/KDLL1h5/santa-pad.jpg";
+		break;
+	case IDC_RADIO2:
+		imageSource = "https://i.ibb.co/KrWdY4k/rudolf-pad.jpg";
+		break;
+	case IDC_RADIO3:
+		imageSource = "https://i.ibb.co/n8ytJZt/snowman-pad.jpg";
+		break;
+	case IDC_RADIO4:
+		imageSource = "https://i.ibb.co/K61qCSt/cookie-pad.jpg";
+		break;
+	default:
+		break;
+	}
+
+
+	CString currentText;
+	GetDlgItemText(IDC_EDIT_BODY, currentText);
+
+	CString htmlCode;
+	htmlCode += _T("<body style='background-image: url(");
+	htmlCode += imageSource;
+	htmlCode += _T("); background-size: 500px; width:500px; height:500px;  background-repeat: no-repeat; display: flex; justify-content: center; align-items: center;'>");
+	htmlCode += _T("<div style='color: black; font-size: 15px; text-align: center; font-family: Arial, sans-serif; padding: 100px; box-sizing: border-box;'>");
+	htmlCode += currentText;
+	htmlCode += _T("</div></body>");
+
+
+
+	m_body = htmlCode;
+	CString body = m_body;
+	
 	oSmtp->BodyText = (LPCTSTR)body;
 	oSmtp->BodyFormat = 1; //' Using HTML FORMAT to send mail
 

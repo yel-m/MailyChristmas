@@ -212,6 +212,10 @@
     <None Include="res\MailyChristmas.rc2" />
   </ItemGroup>
   <ItemGroup>
+    <Image Include="..\..\..\..\Downloads\m_cookie_pad (1).bmp" />
+    <Image Include="..\..\..\..\Downloads\m_rudolf_pad (1).bmp" />
+    <Image Include="..\..\..\..\Downloads\m_santa_pad (1).bmp" />
+    <Image Include="..\..\..\..\Downloads\m_snowman_pad (1).bmp" />
     <Image Include="cookie_pad.bmp" />
     <Image Include="m_cookie_pad.bmp" />
     <Image Include="m_rudolf_pad.bmp" />
